@@ -13,13 +13,15 @@ pipeline {
       }
     }
 
-    stage('Build Docker Image') {
+    stage('Build Docker Image with .env') {
       steps {
-        script {
-          docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+        withCredentials([file(credentialsId: 'express-api-env-file', variable: 'DOTENV')]) {
+          sh 'cp $DOTENV .env'  // ✅ This copies your secret .env into the workspace
+          sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'  // ✅ Uses Dockerfile + .env
         }
       }
     }
+
 
     stage('Push to Docker Hub') {
       steps {
