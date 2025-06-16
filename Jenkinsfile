@@ -7,12 +7,12 @@ pipeline {
   }
 
   stages {
-    // stage('Clone Repo') {
-    //   steps {
-    //     git branch: 'main', url: 'https://github.com/sobin-restart/express-api-demo.git'
-    //     // git 'https://github.com/sobin-restart/express-api-demo.git'
-    //   }
-    // }
+    stage('Clone Repo') {
+      steps {
+        git branch: 'main', url: 'https://github.com/sobin-restart/express-api-demo.git'
+        // git 'https://github.com/sobin-restart/express-api-demo.git'
+      }
+    }
 
     stage('Build Docker Image with .env') {
       steps {
