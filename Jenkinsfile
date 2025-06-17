@@ -49,8 +49,8 @@ pipeline {
           docker compose up -d
         '
       """  
-    }
-  }
-  }
-
-}
+        }
+      }
+    }        // close Deploy stage
+  }          // close stages
+}  
