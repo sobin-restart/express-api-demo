@@ -29,7 +29,7 @@ pipeline {
       steps {
         withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
           script {
-            sh "echo $PASSWORD | docker login -u $USERNAME --password-stdin"
+            sh "echo \$PASSWORD | docker login -u \$USERNAME --password-stdin"
             sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
           }
         }
@@ -41,13 +41,8 @@ pipeline {
         script {
           sshagent(['deploy-to-oracle-sobin-poc-key']) {
             sh """
-              ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} << 'ENDSSH'
-                set -e
-                cd ${DEPLOY_PATH}
-                docker compose down
-                docker compose pull
-                docker compose up -d
-              ENDSSH
+              ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} \\
+              'cd ${DEPLOY_PATH} && docker compose down && docker compose pull && docker compose up -d'
             """
           }
         }
