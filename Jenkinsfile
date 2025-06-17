@@ -3,13 +3,13 @@ pipeline {
 
   environment {
     IMAGE_NAME = "sobinscott/express-api-demo"
-    IMAGE_TAG = "1.0.0"
+    IMAGE_TAG = "2.0.0"
   }
 
   stages {
     stage('Clone Repo') {
       steps {
-        git branch: 'main', url: 'https://github.com/sobin-restart/express-api-demo.git'
+        git branch: 'dev', url: 'https://github.com/sobin-restart/express-api-demo.git'
         // git 'https://github.com/sobin-restart/express-api-demo.git'
       }
     }
