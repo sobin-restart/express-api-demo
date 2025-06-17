@@ -39,14 +39,15 @@ pipeline {
     stage('Deploy to Server') {
       steps {
         script {
-          sshagent(credentials: ['deploy-to-oracle-sobin-poc-key']) {
+          sshagent(['deploy-to-oracle-sobin-poc-key']) {
             sh """
-              ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} '
-                cd ${DEPLOY_PATH} &&
-                docker compose down &&
-                docker compose pull &&
+              ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} << 'ENDSSH'
+                set -e
+                cd ${DEPLOY_PATH}
+                docker compose down
+                docker compose pull
                 docker compose up -d
-              '
+              ENDSSH
             """
           }
         }
