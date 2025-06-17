@@ -13,19 +13,17 @@ pipeline {
     stage('Clone Repo') {
       steps {
         git branch: 'dev', url: 'https://github.com/sobin-restart/express-api-demo.git'
-        // git 'https://github.com/sobin-restart/express-api-demo.git'
       }
     }
 
     stage('Build Docker Image with .env') {
       steps {
         withCredentials([file(credentialsId: 'express-api-env-file', variable: 'DOTENV')]) {
-          sh 'cp $DOTENV .env'  // ✅ This copies your secret .env into the workspace
-          sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'  // ✅ Uses Dockerfile + .env
+          sh 'cp $DOTENV .env'
+          sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
         }
       }
     }
-
 
     stage('Push to Docker Hub') {
       steps {
@@ -40,16 +38,17 @@ pipeline {
 
     stage('Deploy to Server') {
       steps {
-        // <-- load the SSH key you just created
-        sshagent(credentials: ['deploy-to-oracle-sobin-poc-key']) {
-          sh """
-            ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} '
-              cd ${DEPLOY_PATH} &&
-              docker compose down &&
-              docker compose pull &&
-              docker compose up -d
-            '
-          """
+        script {
+          sshagent(credentials: ['deploy-to-oracle-sobin-poc-key']) {
+            sh """
+              ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} '
+                cd ${DEPLOY_PATH} &&
+                docker compose down &&
+                docker compose pull &&
+                docker compose up -d
+              '
+            """
+          }
         }
       }
     }
