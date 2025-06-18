@@ -3,11 +3,15 @@ pipeline {
 
   environment {
     IMAGE_NAME = "sobinscott/express-api-demo"
-    IMAGE_TAG = "2.0.0"
     DEPLOY_USER = "ubuntu"
     DEPLOY_HOST = "80.225.228.174"
     DEPLOY_PATH = "/home/ubuntu/express-prod"
   }
+
+  parameters {
+  string(name: 'IMAGE_TAG', defaultValue: '2.0.0')
+}
+
 
   stages {
     stage('Clone Repo') {
